@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.persistence.OptimisticLockException;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.anexa.core.data.jpa.repository.IdentifiedDomainObjectRepository;
 import com.anexa.core.domain.IdentifiedDomainObject;
 import com.anexa.core.domain.VersionableObject;
@@ -15,7 +13,6 @@ import com.anexa.core.services.crud.api.CrudService;
 
 import lombok.val;
 
-@Transactional(readOnly = true)
 abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M extends IdentifiedDomainObject<ID>, ID>
 		extends QueryServiceImpl<E, M, ID> implements CrudService<M, ID> {
 
@@ -25,7 +22,6 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	// -----------------------------------------------------------------------------------------------------------------------
 	// CREATE
 	// -----------------------------------------------------------------------------------------------------------------------
-	@Transactional
 	@Override
 	public M create(M model) {
 		E entity = newEntity();
@@ -38,7 +34,6 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 		return result;
 	}
 
-	@Transactional
 	@Override
 	public List<M> create(List<M> models) {
 		val result = new ArrayList<M>();
@@ -57,7 +52,6 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	// -----------------------------------------------------------------------------------------------------------------------
 	// UPDATE
 	// -----------------------------------------------------------------------------------------------------------------------
-	@Transactional
 	@Override
 	public M update(M model) {
 		E entity = findOneEntityById(model.getId());
@@ -77,7 +71,6 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 		return result;
 	}
 
-	@Transactional
 	@Override
 	public List<M> update(List<M> models) {
 		val result = new ArrayList<M>();
@@ -96,21 +89,19 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	// -----------------------------------------------------------------------------------------------------------------------
 	// DELETE
 	// -----------------------------------------------------------------------------------------------------------------------
-	@Transactional
 	@Override
 	public void delete(ID id) {
 		E entity = findOneEntityById(id);
 
 		if (entity instanceof VersionableObject) {
 			throw new UnsupportedOperationException(
-					"La entidad implenta la interfaz VersionableObject y debe ser eliminada por medio del metodo delete(ID id, int version)");
+					"La entidad implementa la interfaz VersionableObject y debe ser eliminada por medio del metodo delete(ID id, int version)");
 		}
 
 		entity = beforeDelete(entity);
 		deleteEntity(entity);
 	}
 
-	@Transactional
 	@Override
 	public void delete(List<ID> ids) {
 		for (val e : ids) {
@@ -118,14 +109,13 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 		}
 	}
 
-	@Transactional
 	@Override
 	public void delete(ID id, int version) {
 		E entity = findOneEntityById(id);
 
 		if (!(entity instanceof VersionableObject)) {
 			throw new UnsupportedOperationException(
-					"La entidad NO implenta la interfaz VersionableObject y debe ser eliminada por medio del metodo delete(ID id)");
+					"La entidad NO implementa la interfaz VersionableObject y debe ser eliminada por medio del metodo delete(ID id)");
 		}
 
 		val e = (VersionableObject) entity;
@@ -137,7 +127,6 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 		deleteEntity(entity);
 	}
 
-	@Transactional
 	@Override
 	public void delete(Map<ID, Integer> models) {
 		for (val e : models.entrySet()) {

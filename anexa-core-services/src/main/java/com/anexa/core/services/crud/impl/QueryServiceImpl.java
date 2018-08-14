@@ -10,14 +10,12 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.anexa.core.domain.IdentifiedDomainObject;
 import com.anexa.core.services.crud.api.QueryService;
 
 import lombok.val;
 
-@Transactional(readOnly = true)
 public abstract class QueryServiceImpl<E extends IdentifiedDomainObject<ID>, M extends IdentifiedDomainObject<ID>, ID>
 		implements QueryService<M, ID> {
 

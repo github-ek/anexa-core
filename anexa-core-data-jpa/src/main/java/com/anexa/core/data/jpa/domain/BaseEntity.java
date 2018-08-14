@@ -6,10 +6,12 @@ import javax.persistence.MappedSuperclass;
 
 import com.anexa.core.domain.IdentifiedDomainObject;
 
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @MappedSuperclass
 @ToString
+@NoArgsConstructor
 public abstract class BaseEntity<ID> implements IdentifiedDomainObject<ID> {
 
 	/**
