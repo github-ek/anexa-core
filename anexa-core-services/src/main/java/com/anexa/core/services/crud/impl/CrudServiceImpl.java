@@ -17,7 +17,7 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 		extends QueryServiceImpl<E, M, ID> implements CrudService<M, ID> {
 
 	@Override
-	protected abstract IdentifiedDomainObjectRepository<E, ID> getRepository();
+	abstract protected IdentifiedDomainObjectRepository<E, ID> getRepository();
 
 	// -----------------------------------------------------------------------------------------------------------------------
 	// CREATE
@@ -143,7 +143,7 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	// -----------------------------------------------------------------------------------------------------------------------
 	abstract protected E newEntity();
 
-	protected abstract E asEntity(M model, E entity);
+	abstract protected E asEntity(M model, E entity);
 
 	protected E saveAndFlush(E entity) {
 		val result = getRepository().saveAndFlush(entity);
