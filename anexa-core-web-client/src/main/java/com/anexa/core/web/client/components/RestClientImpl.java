@@ -68,6 +68,14 @@ public class RestClientImpl implements RestClient {
 	}
 
 	@Override
+	public <T> ResponseEntity<T> patch(String resourcePath, Object model, Class<T> responseType,
+			Object... uriVariables) {
+		val request = createRequestEntity(mapModelToRequestBody(model));
+		val result = getRestTemplate().exchange(resourcePath, HttpMethod.PATCH, request, responseType, uriVariables);
+		return result;
+	}
+	
+	@Override
 	public <ID> void delete(String resourcePath, ID id) {
 		getRestTemplate().delete(resourcePath, id);
 	}
@@ -118,5 +126,4 @@ public class RestClientImpl implements RestClient {
 
 		return sb.toString();
 	}
-
 }

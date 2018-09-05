@@ -26,7 +26,7 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	public M create(M model) {
 		E entity = newEntity();
 
-		entity = asEntity(model, entity);
+		entity = mergeEntity(model, entity);
 		entity = beforeCreate(entity);
 		entity = saveAndFlush(entity);
 
@@ -56,19 +56,22 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	public M update(M model) {
 		E entity = findOneEntityById(model.getId());
 
-		entity = asEntity(model, entity);
+		entity = mergeEntity(model, entity);
 		entity = beforeUpdate(entity);
 
+		setVersion(model, entity);
+		entity = saveAndFlush(entity);
+
+		M result = asModel(entity);
+		return result;
+	}
+
+	protected void setVersion(M model, E entity) {
 		if (entity instanceof VersionableObject && model instanceof VersionableObject) {
 			val e = (VersionableObject) entity;
 			val m = (VersionableObject) model;
 			e.setVersion(m.getVersion());
 		}
-
-		entity = saveAndFlush(entity);
-
-		M result = asModel(entity);
-		return result;
 	}
 
 	@Override
@@ -143,7 +146,7 @@ abstract public class CrudServiceImpl<E extends IdentifiedDomainObject<ID>, M ex
 	// -----------------------------------------------------------------------------------------------------------------------
 	abstract protected E newEntity();
 
-	abstract protected E asEntity(M model, E entity);
+	abstract protected E mergeEntity(M model, E entity);
 
 	protected E saveAndFlush(E entity) {
 		val result = getRepository().saveAndFlush(entity);

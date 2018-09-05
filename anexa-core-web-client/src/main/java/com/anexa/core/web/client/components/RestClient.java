@@ -20,6 +20,8 @@ public interface RestClient {
 
 	<T> ResponseEntity<T> put(String resourcePath, Object model, Class<T> responseType, Object... uriVariables);
 
+	<T> ResponseEntity<T> patch(String resourcePath, Object model, Class<T> responseType, Object... uriVariables);
+
 	<ID> void delete(String resourcePath, ID id);
 	
 	<ID> void delete(String resourcePath, ID id, int version);
