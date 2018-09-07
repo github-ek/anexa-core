@@ -54,7 +54,8 @@
 		<module>anexa-core-services</module>
 		<module>anexa-core-web-api</module>
 		<module>anexa-core-web-client</module>
-		
-		
+
+
+		<module>anexa-core-mail</module>
 	</modules>
 </project>
