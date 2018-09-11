@@ -9,6 +9,9 @@ import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.anexa.core.domain.IdentifiedDomainObject;
@@ -82,6 +85,12 @@ public abstract class QueryServiceImpl<E extends IdentifiedDomainObject<ID>, M e
 
 	protected List<M> asModels(Collection<E> entities) {
 		val result = entities.stream().map(e -> asModel(e)).collect(toList());
+		return result;
+	}
+
+	protected Slice<M> asModels(Slice<E> slice, Pageable pageable) {
+		val models = asModels(slice.getContent());
+		val result = new SliceImpl<>(models, pageable, slice.hasNext());
 		return result;
 	}
 }
