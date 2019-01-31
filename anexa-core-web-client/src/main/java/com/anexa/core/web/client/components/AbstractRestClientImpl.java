@@ -1,25 +1,17 @@
 package com.anexa.core.web.client.components;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.val;
 
-@Component
-public class RestClientImpl implements RestClient {
+abstract public class AbstractRestClientImpl implements RestClient {
 
-	@Autowired
-	private RestTemplate restTemplate;
-
-	protected RestTemplate getRestTemplate() {
-		return restTemplate;
-	};
+	abstract public RestTemplate getRestTemplate();
 
 	// -----------------------------------------------'-------------------------------------------------------------------------------------
 	// -- HTTP GET METHODS

@@ -48,7 +48,7 @@
 		</dependencies>
 	</dependencyManagement>
 	<modules>
-		<module>anexa-core-configuration</module>
+		
 		<module>anexa-core-domain</module>
 		<module>anexa-core-data-jpa</module>
 		<module>anexa-core-services</module>

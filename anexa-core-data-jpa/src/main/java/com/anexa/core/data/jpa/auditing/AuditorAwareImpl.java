@@ -21,6 +21,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         String username = ((User) authentication.getPrincipal()).getUsername();
         log.debug("Returning username: {}", username);
 */
-		return Optional.of("");
+		return Optional.of("_");
 	}
 }

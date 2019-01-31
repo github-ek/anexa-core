@@ -14,7 +14,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.anexa.core.data.jpa.domain.AuditableEntity;
+import com.anexa.core.data.jpa.domain.SimpleAuditableEntity;
 import com.anexa.core.domain.IdentifiedDomainObject;
+import com.anexa.core.dto.AuditableEntityDto;
+import com.anexa.core.dto.SimpleAuditableEntityDto;
 import com.anexa.core.services.crud.api.QueryService;
 
 import lombok.val;
@@ -93,4 +97,21 @@ public abstract class QueryServiceImpl<E extends IdentifiedDomainObject<ID>, M e
 		val result = new SliceImpl<>(models, pageable, slice.hasNext());
 		return result;
 	}
+
+	protected void mapModel(SimpleAuditableEntity<ID> entity, SimpleAuditableEntityDto<ID> model) {
+		model.setId(entity.getId());
+		model.setVersion(entity.getVersion());
+		model.setFechaCreacion(entity.getFechaCreacion());
+		model.setFechaModificacion(entity.getFechaModificacion());
+	}
+
+	protected void mapModel(AuditableEntity<ID> entity, AuditableEntityDto<ID> model) {
+		SimpleAuditableEntity<ID> e = entity;
+		SimpleAuditableEntityDto<ID> m = model;
+		mapModel(e, m);
+		model.setCreadoPor(entity.getCreadoPor());
+		model.setModificadoPor(entity.getModificadoPor());
+	}
+
+	abstract protected M newModel();
 }
