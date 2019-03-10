@@ -1,8 +1,8 @@
-package com.anexa.core.web.client.configuration;
+package com.anexa.core.web.client.properties;
 
 public interface RestProperties {
-	
+
 	String getBasePath();
-	
+
 	void setBasePath(String basePath);
 }

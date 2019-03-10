@@ -1,4 +1,4 @@
-package com.anexa.core.web.client.configuration;
+package com.anexa.core.web.client.properties;
 
 public interface RestTokenProperties {
 	String getApiKeyHeader();

@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.anexa.core.web.client.components.RestClient;
-import com.anexa.core.web.client.configuration.RestProperties;
+import com.anexa.core.web.client.properties.RestProperties;
 import com.anexa.core.web.client.service.api.LocalQueryService;
 
 import lombok.val;
