@@ -12,7 +12,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.anexa.core.data.jpa.domain.BaseEntity;
 import com.anexa.core.domain.ObjectAuditableByTime;
 import com.anexa.core.domain.VersionableObject;
 

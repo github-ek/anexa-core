@@ -67,7 +67,6 @@ public class MailServiceImpl implements MailService {
 			helper.setText(content, html);
 
 			for (File attachment : attachments) {
-				// FileSystemResource file = new FileSystemResource(attachment);
 				val name = attachment.getName();
 				helper.addAttachment(name, attachment);
 			}

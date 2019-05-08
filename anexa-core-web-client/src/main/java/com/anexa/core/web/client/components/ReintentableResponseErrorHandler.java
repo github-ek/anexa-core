@@ -33,7 +33,6 @@ public class ReintentableResponseErrorHandler extends DefaultResponseErrorHandle
 		boolean retry = false;
 
 		retry = retry(httpResponse);
-
 		if (retry) {
 			val status = httpResponse.getStatusCode();
 			val statusText = httpResponse.getStatusText();
@@ -76,7 +75,7 @@ public class ReintentableResponseErrorHandler extends DefaultResponseErrorHandle
 	protected byte[] getResponseBody(ClientHttpResponse response) {
 		try {
 			val result = FileCopyUtils.copyToByteArray(response.getBody());
-			if(log.isDebugEnabled()) {
+			if (log.isDebugEnabled()) {
 				log.debug("Body: {}", new String(result));
 			}
 			return result;

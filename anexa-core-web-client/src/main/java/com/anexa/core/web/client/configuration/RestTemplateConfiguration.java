@@ -55,7 +55,7 @@ public abstract class RestTemplateConfiguration {
 	}
 
 	protected int getTimeout() {
-		return 60 * 1000;
+		return 5 * 60 * 1000;
 	}
 
 	ConnectionKeepAliveStrategy getKeepAliveStrategy() {
