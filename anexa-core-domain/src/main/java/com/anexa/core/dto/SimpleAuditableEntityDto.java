@@ -7,7 +7,6 @@ import org.springframework.format.annotation.NumberFormat;
 
 import com.anexa.core.domain.ObjectAuditableByTime;
 import com.anexa.core.domain.VersionableObject;
-import com.anexa.core.dto.EntityDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
