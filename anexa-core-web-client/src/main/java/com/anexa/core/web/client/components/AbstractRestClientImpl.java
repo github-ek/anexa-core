@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,16 +20,26 @@ abstract public class AbstractRestClientImpl implements RestClient {
 	// ------------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public <T, ID> ResponseEntity<T> get(String resourcePath, Class<T> responseType, ID id) {
-		val query = "{id}";
-		val result = getOneQuery(resourcePath, query, responseType, id);
-		return result;
+		return get(resourcePath, getHttpHeaders(), responseType, id);
+	}
+
+	@Override
+	public <T, ID> ResponseEntity<T> get(String resourcePath, HttpHeaders headers, Class<T> responseType, ID id) {
+		return getOneQuery(resourcePath, "{id}", headers, responseType, id);
 	}
 
 	@Override
 	public <T> ResponseEntity<T> getOneQuery(String resourcePath, String query, Class<T> responseType,
 			Object... uriVariables) {
+		return getOneQuery(resourcePath, query, getHttpHeaders(), responseType, uriVariables);
+	}
+
+	@Override
+	public <T> ResponseEntity<T> getOneQuery(String resourcePath, String query, HttpHeaders headers,
+			Class<T> responseType, Object... uriVariables) {
+		HttpEntity<?> request = new HttpEntity<>(headers);
+
 		val url = buildUrl(resourcePath, query);
-		val request = createRequestEntity("");
 		val result = getRestTemplate().exchange(url, HttpMethod.GET, request, responseType, uriVariables);
 		return result;
 	}
@@ -36,8 +47,15 @@ abstract public class AbstractRestClientImpl implements RestClient {
 	@Override
 	public <T> ResponseEntity<T[]> getAllQuery(String resourcePath, String query, Class<T[]> responseType,
 			Object... uriVariables) {
+		return getAllQuery(resourcePath, query, getHttpHeaders(), responseType, uriVariables);
+	}
+
+	@Override
+	public <T> ResponseEntity<T[]> getAllQuery(String resourcePath, String query, HttpHeaders headers,
+			Class<T[]> responseType, Object... uriVariables) {
+		HttpEntity<?> request = new HttpEntity<>(headers);
+
 		val url = buildUrl(resourcePath, query);
-		val request = createRequestEntity("");
 		val result = getRestTemplate().exchange(url, HttpMethod.GET, request, responseType, uriVariables);
 		return result;
 	}
@@ -48,14 +66,18 @@ abstract public class AbstractRestClientImpl implements RestClient {
 	@Override
 	public <T> ResponseEntity<T> post(String resourcePath, Object model, Class<T> responseType,
 			Object... uriVariables) {
-		val request = createRequestEntity(mapModelToRequestBody(model));
+		HttpHeaders headers = getHttpHeaders();
+		HttpEntity<?> request = new HttpEntity<>(mapModelToRequestBody(model), headers);
+
 		val result = getRestTemplate().exchange(resourcePath, HttpMethod.POST, request, responseType, uriVariables);
 		return result;
 	}
 
 	@Override
 	public <T> ResponseEntity<T> put(String resourcePath, Object model, Class<T> responseType, Object... uriVariables) {
-		val request = createRequestEntity(mapModelToRequestBody(model));
+		HttpHeaders headers = getHttpHeaders();
+		HttpEntity<?> request = new HttpEntity<>(mapModelToRequestBody(model), headers);
+
 		val result = getRestTemplate().exchange(resourcePath, HttpMethod.PUT, request, responseType, uriVariables);
 		return result;
 	}
@@ -63,11 +85,13 @@ abstract public class AbstractRestClientImpl implements RestClient {
 	@Override
 	public <T> ResponseEntity<T> patch(String resourcePath, Object model, Class<T> responseType,
 			Object... uriVariables) {
-		val request = createRequestEntity(mapModelToRequestBody(model));
+		HttpHeaders headers = getHttpHeaders();
+		HttpEntity<?> request = new HttpEntity<>(mapModelToRequestBody(model), headers);
+
 		val result = getRestTemplate().exchange(resourcePath, HttpMethod.PATCH, request, responseType, uriVariables);
 		return result;
 	}
-	
+
 	@Override
 	public <ID> void delete(String resourcePath, ID id) {
 		getRestTemplate().delete(resourcePath, id);
@@ -78,40 +102,41 @@ abstract public class AbstractRestClientImpl implements RestClient {
 		getRestTemplate().delete(resourcePath, id, version);
 	}
 
-	protected <T> Object mapModelToRequestBody(T model) {
-		return model;
-	}
-
 	// -----------------------------------------------'-------------------------------------------------------------------------------------
 	// --
 	// ------------------------------------------------------------------------------------------------------------------------------------
-
-	protected HttpEntity<?> createRequestEntity(Object body) {
-		HttpHeaders headers = getHttpHeaders();
-		HttpEntity<?> result = new HttpEntity<>(body, headers);
-		return result;
+	@Override
+	public HttpHeaders getHttpHeaders() {
+		return getHttpHeaders(getDefaultMediaType());
 	}
 
-	protected HttpHeaders getHttpHeaders() {
+	@Override
+	public HttpHeaders getHttpHeaders(MediaType mediaType) {
+		return getHttpHeaders(mediaType, getDefaultHeaders());
+	}
+
+	@Override
+	public HttpHeaders getHttpHeaders(MediaType mediaType, MultiValueMap<String, String> values) {
 		HttpHeaders result = new HttpHeaders();
-		result.setContentType(getMediaType());
+		result.setContentType(mediaType);
 
-		val defaultHeaders = getDefaultHeaders();
-		if (defaultHeaders != null) {
-			result.addAll(defaultHeaders);
+		if (values != null) {
+			result.addAll(values);
 		}
+
 		return result;
 	}
 
-	protected MediaType getMediaType() {
+	@Override
+	public MultiValueMap<String, String> getDefaultHeaders() {
+		return new LinkedMultiValueMap<String, String>();
+	}
+
+	protected MediaType getDefaultMediaType() {
 		return MediaType.APPLICATION_JSON;
 	}
 
-	protected MultiValueMap<String, String> getDefaultHeaders() {
-		return null;
-	}
-
-	protected String buildUrl(String resourcePath, String query) {
+	public static String buildUrl(String resourcePath, String query) {
 		val sb = new StringBuilder();
 		sb.append(resourcePath);
 
@@ -126,5 +151,9 @@ abstract public class AbstractRestClientImpl implements RestClient {
 		}
 
 		return sb.toString();
+	}
+
+	protected <T> Object mapModelToRequestBody(T model) {
+		return model;
 	}
 }
