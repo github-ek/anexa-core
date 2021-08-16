@@ -30,6 +30,36 @@ public class MailServiceImpl implements MailService {
 	private JavaMailSender mailSender;
 
 	@Override
+	public void sendMail(String to, MailMessageDto mailMessage) {
+		sendMail(new String[] { to }, new String[0], mailMessage);
+	}
+
+	@Override
+	public void sendMail(String to[], String cc[], MailMessageDto mailMessage) {
+		try {
+			MimeMessage message = this.mailSender.createMimeMessage();
+
+			// @formatter:off
+			message = crearMimeMessage(
+					message, 
+					properties.getFrom(), 
+					properties.getFromPersonal(), 
+					to, 
+					cc, 
+					mailMessage.getAsunto(), 
+					mailMessage.getContenido(),
+					true, 
+					mailMessage.getAttachments());
+			// @formatter:on
+
+			this.mailSender.send(message);
+		} catch (RuntimeException e) {
+			log.error("catch (" + e.getClass().getSimpleName() + " e), exception:" + e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
 	public void sendMail(MailMessageDto mailMessage) {
 		try {
 			MimeMessage message = this.mailSender.createMimeMessage();
