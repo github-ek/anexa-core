@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,7 +15,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.egakat.core.domain.ObjectAuditableByTime;
 import com.egakat.core.domain.VersionableObject;
-import com.sun.istack.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

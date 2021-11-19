@@ -3,13 +3,13 @@ package com.egakat.core.data.jpa.domain;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.egakat.core.domain.ObjectAuditableByUser;
-import com.sun.istack.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
